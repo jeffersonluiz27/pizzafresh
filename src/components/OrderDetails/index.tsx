@@ -7,11 +7,12 @@ import { OrderItemType } from 'types/orderItemType';
 import { OrderType } from 'types/ordertype';
 import * as S from './style';
 
-type OrderDetailsType = HTMLAttributes<HTMLDivElement>
+type OrderDetailsType = HTMLAttributes<HTMLDivElement>;
 
 type OrderDetailsProps = {
 	orders: OrderItemType[];
 	activeOrderType: OrderType;
+	selectedTable?: number | string;
 	onProceedToPayment: () => void;
 	onOrdersChange: (orders: OrderItemType[]) => void;
 	onChangeActiveOrderType: (data: OrderType) => void;
@@ -19,43 +20,54 @@ type OrderDetailsProps = {
 } & OrderDetailsType;
 
 const OrderDetails = ({
-	orders, 
-	activeOrderType, 
+	orders,
+	activeOrderType,
+	selectedTable,
 	onProceedToPayment,
-	onChangeActiveOrderType, 
-	onRemoveItem, 
-	onOrdersChange
+	onChangeActiveOrderType,
+	onRemoveItem,
+	onOrdersChange,
 }: OrderDetailsProps) => {
-	const price = orders.map((i) => i.product.price * i.quantity).reduce((a,b) => a+b, 0);
+	const price = orders
+		.map((i) => i.product.price * i.quantity)
+		.reduce((a, b) => a + b, 0);
 	const [priceState, setPriceState] = useState(price);
 
+	const disabledButton =
+		!Boolean(orders.length) ||
+		!Boolean(selectedTable) ||
+		selectedTable === 'default';
+
 	const handleChange = (data: OrderItemType) => {
-			const list = orders.map((item) => 
+		const list = orders.map((item) =>
 			item.product.id === data.product.id ? data : item
-			);
-			onOrdersChange(list);
-	}
+		);
+		onOrdersChange(list);
+	};
 
 	useEffect(() => {
-		setPriceState(price)
+		setPriceState(price);
 	}, [orders, price]);
 
 	return (
 		<S.OrderDetails>
 			<S.OrderDetailsTitle>Detalhes do Pedido</S.OrderDetailsTitle>
 			<S.OrderDetailsButtonGroup>
-				<ButtonToggle 
-					onClick={()=> onChangeActiveOrderType(OrderType.COMER_NO_LOCAL)} 
-					active={activeOrderType === OrderType.COMER_NO_LOCAL} 
-					value="Comer no Local" />
-				<ButtonToggle 
-					onClick={()=> onChangeActiveOrderType(OrderType.PARA_VIAGEM)} 
-					active={activeOrderType === OrderType.PARA_VIAGEM} 
-					value="P/ Viagem" />
-				<ButtonToggle 
-					onClick={()=> onChangeActiveOrderType(OrderType.DELIVERY)} 
-					active={activeOrderType === OrderType.DELIVERY} 
-					value="Delivery" />
+				<ButtonToggle
+					onClick={() => onChangeActiveOrderType(OrderType.COMER_NO_LOCAL)}
+					active={activeOrderType === OrderType.COMER_NO_LOCAL}
+					value="Comer no Local"
+				/>
+				<ButtonToggle
+					onClick={() => onChangeActiveOrderType(OrderType.PARA_VIAGEM)}
+					active={activeOrderType === OrderType.PARA_VIAGEM}
+					value="P/ Viagem"
+				/>
+				<ButtonToggle
+					onClick={() => onChangeActiveOrderType(OrderType.DELIVERY)}
+					active={activeOrderType === OrderType.DELIVERY}
+					value="Delivery"
+				/>
 			</S.OrderDetailsButtonGroup>
 			<S.OrderDetailsList>
 				<OrderItemList
@@ -69,8 +81,8 @@ const OrderDetails = ({
 					list={
 						Boolean(orders.length) ? (
 							orders.map((item, index) => (
-								<OrderItem 
-									onRemoveItem={()=> onRemoveItem(item.product.id)}
+								<OrderItem
+									onRemoveItem={() => onRemoveItem(item.product.id)}
 									onItemChange={handleChange}
 									product={item.product}
 									quantity={item.quantity}
@@ -78,7 +90,9 @@ const OrderDetails = ({
 									key={`OrderDetails-${index}`}
 								/>
 							))
-						) : (<S.OrderDetailsListGap />)
+						) : (
+							<S.OrderDetailsListGap />
+						)
 					}
 					footer={
 						<S.OrderDetailsListFooter>
@@ -86,9 +100,10 @@ const OrderDetails = ({
 								<span>Subtotal</span>
 								<span>R$ {priceState.toFixed(2)}</span>
 							</S.OrderDetailsListFooterRow>
-							<ButtonLarge 
-								value="Continue para o pagamento" 
+							<ButtonLarge
+								value="Continue para o pagamento"
 								onClick={onProceedToPayment}
+								disabled={disabledButton}
 							/>
 						</S.OrderDetailsListFooter>
 					}
