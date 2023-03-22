@@ -13,9 +13,10 @@ type OrderDetailsProps = {
 	orders: OrderItemType[];
 	onChangeActiveOrderType: (data: OrderType) => void;
 	activeOrderType: OrderType;
+	onRemoveItem: (id: string) => void;
 } & OrderDetailsType;
 
-const OrderDetails = ({orders, onChangeActiveOrderType, activeOrderType}: OrderDetailsProps) => {
+const OrderDetails = ({orders, onChangeActiveOrderType, activeOrderType, onRemoveItem}: OrderDetailsProps) => {
 	const price = orders.map((i) => i.product.price * i.quantity).reduce((a,b) => a+b, 0);
 	const [priceState, setPriceState] = useState(price);
 
@@ -53,6 +54,7 @@ const OrderDetails = ({orders, onChangeActiveOrderType, activeOrderType}: OrderD
 						Boolean(orders.length) ? (
 							orders.map((item, index) => (
 								<OrderItem 
+									onRemoveItem={()=> onRemoveItem(item.product.id)}
 									product={item.product}
 									quantity={item.quantity}
 									observation={item.observation}
