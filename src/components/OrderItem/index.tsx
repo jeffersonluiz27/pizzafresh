@@ -4,9 +4,10 @@ import { ButtonHTMLAttributes, useEffect, useState } from 'react';
 import { ProductResponse } from 'types/products';
 import { OrderItemType } from 'types/orderItemType';
 
-type DivType = ButtonHTMLAttributes<HTMLDivElement>
+type DivType = ButtonHTMLAttributes<HTMLDivElement>;
 
 export type OrderItemProps = {
+	canDelete?: Boolean;
 	product: ProductResponse;
 	quantity: number;
 	observation?: string;
@@ -15,11 +16,12 @@ export type OrderItemProps = {
 } & DivType;
 
 const OrderItem = ({
-	product, 
-	quantity, 
-	observation = '', 
+	product,
+	quantity,
+	observation = '',
+	canDelete = true,
 	onRemoveItem,
-	onItemChange, 
+	onItemChange,
 	...props
 }: OrderItemProps) => {
 	const [quntityState, setQuantityState] = useState(quantity);
@@ -39,14 +41,14 @@ const OrderItem = ({
 			quantity: quntityParam,
 			observation: observationParam,
 		});
-	}
+	};
 
 	useEffect(() => {
-		handleObservation(observation)
+		handleObservation(observation);
 	}, [observation]);
 
 	useEffect(() => {
-		handleQuantity(quantity)
+		handleQuantity(quantity);
 	}, [quantity]);
 
 	return (
@@ -54,7 +56,10 @@ const OrderItem = ({
 			<S.OrderItemLeft>
 				<S.OrderItemLeftTop>
 					<S.OrderItemProduct>
-						<S.OrderItemProductImage src={product.image} alt={`Pizza de ${product.name}`} />
+						<S.OrderItemProductImage
+							src={product.image}
+							alt={`Pizza de ${product.name}`}
+						/>
 						<S.OrderItemProductDetails>
 							<S.OrderItemProductDetailsName>
 								{product.name}
@@ -64,12 +69,12 @@ const OrderItem = ({
 							</S.OrderItemProductDetailsPrice>
 						</S.OrderItemProductDetails>
 					</S.OrderItemProduct>
-					<S.OrderItemQuantity 
-						type="number" 
+					<S.OrderItemQuantity
+						type="number"
 						value={quntityState}
-						onChange={({target}) => {
+						onChange={({ target }) => {
 							setQuantityState(Number(target.value));
-							handleChange(Number(target.value), observationState)
+							handleChange(Number(target.value), observationState);
 						}}
 					/>
 				</S.OrderItemLeftTop>
@@ -77,17 +82,21 @@ const OrderItem = ({
 					type="text"
 					placeholder="Observações do pedido"
 					value={observationState}
-					onChange={({target}) => {
-						setObservationState(target.value)
-						handleChange(quntityState, target.value)
+					onChange={({ target }) => {
+						setObservationState(target.value);
+						handleChange(quntityState, target.value);
 					}}
 				/>
 			</S.OrderItemLeft>
 			<S.OrderItemRight>
-				<S.OrderItemRightTotalPrice>R$ {Number(product.price * quntityState).toFixed(2)}</S.OrderItemRightTotalPrice>
-				<S.OrderItemRightTrash onClick={onRemoveItem}>
-					<Trash />
-				</S.OrderItemRightTrash>
+				<S.OrderItemRightTotalPrice>
+					R$ {Number(product.price * quntityState).toFixed(2)}
+				</S.OrderItemRightTotalPrice>
+				{canDelete && (
+					<S.OrderItemRightTrash onClick={onRemoveItem}>
+						<Trash />
+					</S.OrderItemRightTrash>
+				)}
 			</S.OrderItemRight>
 		</S.OrderItem>
 	);

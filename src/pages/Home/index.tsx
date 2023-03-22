@@ -29,6 +29,7 @@ const Home = () => {
 	);
 
 	const [orders, setOrders] = useState<OrderItemType[]>([]);
+	const [porceedToPayment, setPorceedToPayment] = useState<boolean>(false)
 	const handleNavigation = (path: RoutePath) => navigate(path);
 
 	const handleSelection = (product: ProductResponse) => {
@@ -91,15 +92,22 @@ const Home = () => {
 			<aside>
 				<OrderDetails 
 					orders={orders}
+					activeOrderType={activeOrderType}
+					onProceedToPayment={() => setPorceedToPayment(true)}
 					onOrdersChange={(data) => setOrders(data)}
 					onChangeActiveOrderType={(data) => setActiveOrderType(data)}
-					activeOrderType={activeOrderType}
 					onRemoveItem={handleRemoveOrderItem}
 				/>
 			</aside>
-			{/* <Overlay>
-                <CheckoutSection />
-      </Overlay> */}
+			{ porceedToPayment && (
+			<Overlay>
+        <CheckoutSection 
+					orders={orders}
+					onOrdersChange={(data) => setOrders(data) }
+					onCloseSection={() => setPorceedToPayment(false)}
+				/>
+      </Overlay>
+			)}
 		</S.Home>
 	);
 };
