@@ -2,6 +2,7 @@ import * as S from './style';
 import { ReactComponent as Trash } from 'assets/icons/trash.svg';
 import { ButtonHTMLAttributes, useEffect, useState } from 'react';
 import { ProductResponse } from 'types/products';
+import { OrderItemType } from 'types/orderItemType';
 
 type DivType = ButtonHTMLAttributes<HTMLDivElement>
 
@@ -10,9 +11,17 @@ export type OrderItemProps = {
 	quantity: number;
 	observation?: string;
 	onRemoveItem?: () => void;
+	onItemChange: (item: OrderItemType) => void;
 } & DivType;
 
-const OrderItem = ({product, quantity, observation = '', onRemoveItem, ...props}: OrderItemProps) => {
+const OrderItem = ({
+	product, 
+	quantity, 
+	observation = '', 
+	onRemoveItem,
+	onItemChange, 
+	...props
+}: OrderItemProps) => {
 	const [quntityState, setQuantityState] = useState(quantity);
 	const [observationState, setObservationState] = useState(observation);
 
@@ -23,6 +32,14 @@ const OrderItem = ({product, quantity, observation = '', onRemoveItem, ...props}
 	const handleQuantity = (data: number) => {
 		setQuantityState(data);
 	};
+
+	const handleChange = (quntityParam: number, observationParam: string) => {
+		onItemChange({
+			product: product,
+			quantity: quntityParam,
+			observation: observationParam,
+		});
+	}
 
 	useEffect(() => {
 		handleObservation(observation)
@@ -51,7 +68,8 @@ const OrderItem = ({product, quantity, observation = '', onRemoveItem, ...props}
 						type="number" 
 						value={quntityState}
 						onChange={({target}) => {
-							setQuantityState(Number(target.value))
+							setQuantityState(Number(target.value));
+							handleChange(Number(target.value), observationState)
 						}}
 					/>
 				</S.OrderItemLeftTop>
@@ -61,6 +79,7 @@ const OrderItem = ({product, quantity, observation = '', onRemoveItem, ...props}
 					value={observationState}
 					onChange={({target}) => {
 						setObservationState(target.value)
+						handleChange(quntityState, target.value)
 					}}
 				/>
 			</S.OrderItemLeft>
