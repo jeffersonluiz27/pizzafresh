@@ -13,6 +13,8 @@ import Overlay from 'components/Overlay';
 import { products } from 'mocks/products';
 import { orders } from 'mocks/orders';
 import { ProductResponse } from 'types/products';
+import { OrderType } from 'types/ordertype';
+import { useState } from 'react';
 
 const Home = () => {
 	const dateDescription = DateTime.now().toLocaleString({
@@ -20,6 +22,11 @@ const Home = () => {
 		weekday: 'long',
 	});
 	const navigate = useNavigate();
+
+	const [activeOrderType, setActiveOrderType] = useState(
+		OrderType.COMER_NO_LOCAL
+	);
+
 	const handleNavigation = (path: RoutePath) => navigate(path);
 	const handleSelection = (product: ProductResponse) => {};
 
@@ -67,6 +74,8 @@ const Home = () => {
 			<aside>
 				<OrderDetails 
 					orders={orders}
+					onChangeActiveOrderType={(data) => setActiveOrderType(data)}
+					activeOrderType={activeOrderType}
 				/>
 			</aside>
 			{/* <Overlay>
