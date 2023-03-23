@@ -104,7 +104,6 @@ export const CheckoutSectionPaymentFormTitle = styled.h4`
 
 export const PaymentForm = styled.form`
 	${({ theme }) => css`
-		min-height: 340px;
 		label {
 			${theme.mixins.bodyStyle()};
 			font-weight: 500;
@@ -113,6 +112,9 @@ export const PaymentForm = styled.form`
 			margin-top: 8px;
 			${theme.mixins.input()};
 			color: ${theme.colors.textColor};
+		}
+		.payment{
+			min-height: 340px;
 		}
 	`}
 `;

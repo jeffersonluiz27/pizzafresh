@@ -5,22 +5,29 @@ import { ReactComponent as Cash } from 'assets/icons/wallet.svg';
 import * as S from './style';
 import { HTMLAttributes, useState } from 'react';
 import { OrderItemType } from 'types/orderItemType';
+import { OrderType } from 'types/ordertype';
+import { PaymentMethod } from 'types/paymentMethod';
 
-type CheckoutSection = HTMLAttributes<HTMLDivElement>;
+type CheckoutSectionDiv = HTMLAttributes<HTMLDivElement>;
 
 type CheckoutSectionProps = {
 	orders: OrderItemType[];
 	selectedTable?: number;
+	activeOrderType: OrderType
 	onOrdersChange: (orders: OrderItemType[]) => void;
 	onCloseSection: () => void;
-} & CheckoutSection;
+	onChangeActiveOrderType:(data: OrderType) => void
+} & CheckoutSectionDiv;
 
 const CheckoutSection = ({
 	orders,
 	selectedTable,
+	activeOrderType,
 	onOrdersChange,
 	onCloseSection,
+	onChangeActiveOrderType,
 }: CheckoutSectionProps) => {
+	const [activeMethod, setActiveMethod] = useState<PaymentMethod>(PaymentMethod.CARD);
 	const [closing, setClosing] = useState<boolean>(false);
 
 	const handleCloseSection = () => {
@@ -46,56 +53,81 @@ const CheckoutSection = ({
 					<S.CheckoutSectionPaymentFormTitle>
 						Método de Pagamento
 					</S.CheckoutSectionPaymentFormTitle>
-					<S.PaymentForm>
+					<S.PaymentForm className='payment'>
 						<S.PaymentFormCheckbox>
-							<CheckboxIcon active={true} value="Cartão" icon={<Card />} />
-							<CheckboxIcon active={false} value="Dinheiro" icon={<Cash />} />
+							<CheckboxIcon 
+								onClick={() => setActiveMethod(PaymentMethod.CARD)}
+								active={activeMethod === PaymentMethod.CARD} 
+								value="Cartão" 
+								icon={<Card />} 
+							/>
+							<CheckboxIcon 
+								onClick={() => setActiveMethod(PaymentMethod.CASH)}
+								active={activeMethod === PaymentMethod.CASH}  
+								value="Dinheiro" 
+								icon={<Cash />} 
+							/>
 						</S.PaymentFormCheckbox>
-						<>
-							<S.PaymentFormGroup>
-								<label htmlFor="titular">Titular do cartão</label>
-								<input
-									type="text"
-									name="titular"
-									id="titular"
-									placeholder="Wheslley Rimar"
-								/>
-							</S.PaymentFormGroup>
+						{
+							activeMethod === PaymentMethod.CARD && (
+								<>
+									<S.PaymentFormGroup>
+										<label htmlFor="titular">Titular do cartão</label>
+										<input
+											type="text"
+											name="titular"
+											id="titular"
+											placeholder="Wheslley Rimar"
+										/>
+									</S.PaymentFormGroup>
 
-							<S.PaymentFormGroup>
-								<label htmlFor="card">Número do cartão</label>
-								<input
-									type="text"
-									name="card"
-									id="card"
-									placeholder="2564 1421 0897 1244"
-								/>
-							</S.PaymentFormGroup>
+									<S.PaymentFormGroup>
+										<label htmlFor="card">Número do cartão</label>
+										<input
+											type="text"
+											name="card"
+											id="card"
+											placeholder="2564 1421 0897 1244"
+										/>
+									</S.PaymentFormGroup>
 
-							<S.PaymentFormHalf>
-								<S.PaymentFormHalfItem>
-									<label htmlFor="validity">Validade</label>
-									<input
-										type="text"
-										name="card"
-										id="validity"
-										placeholder="05/2022"
-									/>
-								</S.PaymentFormHalfItem>
-								<S.PaymentFormHalfItem>
-									<label htmlFor="cvv">CVV</label>
-									<input type="text" name="cvv" id="cvv" placeholder="140" />
-								</S.PaymentFormHalfItem>
-							</S.PaymentFormHalf>
-						</>
+									<S.PaymentFormHalf>
+										<S.PaymentFormHalfItem>
+											<label htmlFor="validity">Validade</label>
+											<input
+												type="text"
+												name="card"
+												id="validity"
+												placeholder="05/2022"
+											/>
+										</S.PaymentFormHalfItem>
+										<S.PaymentFormHalfItem>
+											<label htmlFor="cvv">CVV</label>
+											<input type="text" name="cvv" id="cvv" placeholder="140" />
+										</S.PaymentFormHalfItem>
+									</S.PaymentFormHalf>
+								</>
+							)
+						}
 					</S.PaymentForm>
 				</S.CheckoutSectionPaymentForm>
 				<S.PaymentActions>
 					<S.PaymentActionsDetails>
 						<S.PaymentActionsDetailsOrderType>
 							<label htmlFor="card">Tipo de pedido</label>
-							<select>
-								<option>{''}</option>
+							<select
+								onChange={({target}) => onChangeActiveOrderType(target.value as OrderType) }
+								name="order-type"
+								id='order-type'
+								value={Object.values(OrderType)
+									.filter((option) => option === activeOrderType)
+									.pop()}
+							>
+								{Object.values(OrderType).map((value, idx) => (
+									<option key={`OrderType-${idx}`} value={value}>
+										{value}
+									</option>
+								))}
 							</select>
 						</S.PaymentActionsDetailsOrderType>
 						<S.PaymentActionsDetailsTableNumber>

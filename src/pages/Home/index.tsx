@@ -106,6 +106,8 @@ const Home = () => {
         <CheckoutSection 
 					orders={orders}
 					onOrdersChange={(data) => setOrders(data) }
+					activeOrderType={activeOrderType}
+					onChangeActiveOrderType={(data) => setActiveOrderType(data)}
 					onCloseSection={() => setPorceedToPayment(false)}
 					selectedTable={selectedTable}
 				/>

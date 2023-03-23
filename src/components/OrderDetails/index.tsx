@@ -100,6 +100,11 @@ const OrderDetails = ({
 								<span>Subtotal</span>
 								<span>R$ {priceState.toFixed(2)}</span>
 							</S.OrderDetailsListFooterRow>
+							{ (!Boolean(selectedTable) || selectedTable === 'default') && (
+								<S.OrderDetailsListFooterWarning>
+									Escolha a mesa primeiro
+								</S.OrderDetailsListFooterWarning>
+							)}
 							<ButtonLarge
 								value="Continue para o pagamento"
 								onClick={onProceedToPayment}
