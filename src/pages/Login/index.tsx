@@ -1,6 +1,13 @@
 import BoxLogin from 'components/BoxLogin';
+import { LocalStorageHelper } from 'helpers/LocalStorageHelper';
 import { useState } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { AuthService } from 'services/AuthService';
+import { ErrorResponse } from 'types/api/error';
+import { Login as LoginData, LoginResponse } from 'types/api/login';
+import { User } from 'types/api/user';
+import { LocalStorageKeys } from 'types/localStorageKeys';
 import { RoutePath } from 'types/routes';
 import * as S from './style';
 
@@ -8,8 +15,30 @@ const Login = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
 
-	const handleSubmit = () => {
-		navigate(RoutePath.HOME);
+	const mutation = useMutation(
+		AuthService.login,
+		{
+			onSuccess: (data: LoginResponse & ErrorResponse) => {
+				if(data.statusCode){
+					setErrorMessage(data.message)
+					return 
+				}
+				if(data.token && data.user){
+					LocalStorageHelper.set<string>(LocalStorageKeys.TOKEN, data.token)
+					LocalStorageHelper.set<User>(LocalStorageKeys.USER, data.user)
+					navigate(RoutePath.HOME)
+				}
+				setErrorMessage(`Tente Novamente`)
+			},
+			onError: () => {
+				setErrorMessage(`Ocorreu um erro durante a requisição`)
+			},
+		},
+	);
+
+	const handleSubmit = (data: LoginData) => {
+		mutation.mutate(data)
+		setErrorMessage(``)
 	};
 
 	return (

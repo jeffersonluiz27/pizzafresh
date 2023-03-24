@@ -5,7 +5,7 @@ import { table } from "./table";
 import { user } from "./user";
 
 export const endpoint = {
-  baseUrl: "http://localhost:3334/",
+  baseUrl: "http://localhost:3334",
   ...auth,
   ...user,
   ...order,
