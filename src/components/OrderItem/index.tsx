@@ -10,7 +10,7 @@ export type OrderItemProps = {
 	canDelete?: Boolean;
 	product: ProductResponse;
 	quantity: number;
-	observation?: string;
+	description?: string;
 	onRemoveItem?: () => void;
 	onItemChange: (item: OrderItemType) => void;
 } & DivType;
@@ -18,34 +18,34 @@ export type OrderItemProps = {
 const OrderItem = ({
 	product,
 	quantity,
-	observation = '',
+	description = '',
 	canDelete = true,
 	onRemoveItem,
 	onItemChange,
 	...props
 }: OrderItemProps) => {
 	const [quntityState, setQuantityState] = useState(quantity);
-	const [observationState, setObservationState] = useState(observation);
+	const [descriptionState, setDescriptionState] = useState(description);
 
-	const handleObservation = (data: string) => {
-		setObservationState(data);
+	const handleDescription = (data: string) => {
+		setDescriptionState(data);
 	};
 
 	const handleQuantity = (data: number) => {
 		setQuantityState(data);
 	};
 
-	const handleChange = (quntityParam: number, observationParam: string) => {
+	const handleChange = (quntityParam: number, descriptionParam: string) => {
 		onItemChange({
 			product: product,
 			quantity: quntityParam,
-			observation: observationParam,
+			description: descriptionParam,
 		});
 	};
 
 	useEffect(() => {
-		handleObservation(observation);
-	}, [observation]);
+		handleDescription(description);
+	}, [description]);
 
 	useEffect(() => {
 		handleQuantity(quantity);
@@ -74,16 +74,16 @@ const OrderItem = ({
 						value={quntityState}
 						onChange={({ target }) => {
 							setQuantityState(Number(target.value));
-							handleChange(Number(target.value), observationState);
+							handleChange(Number(target.value), descriptionState);
 						}}
 					/>
 				</S.OrderItemLeftTop>
 				<S.OrderItemLeftObservation
 					type="text"
 					placeholder="Observações do pedido"
-					value={observationState}
+					value={descriptionState}
 					onChange={({ target }) => {
-						setObservationState(target.value);
+						setDescriptionState(target.value);
 						handleChange(quntityState, target.value);
 					}}
 				/>

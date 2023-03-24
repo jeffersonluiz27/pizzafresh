@@ -86,7 +86,7 @@ const OrderDetails = ({
 									onItemChange={handleChange}
 									product={item.product}
 									quantity={item.quantity}
-									observation={item.observation}
+									description={item.description}
 									key={`OrderDetails-${index}`}
 								/>
 							))

@@ -10,7 +10,7 @@ export const orders: OrderItemType[] = [
 			price: 40.69,
 		},
 		quantity: 1,
-		observation: '',
+		description: '',
 	},
 	{
 		product: {
@@ -21,7 +21,7 @@ export const orders: OrderItemType[] = [
 			price: 40.29,
 		},
 		quantity: 3,
-		observation: '',
+		description: '',
 	},
 	{
 		product: {
@@ -32,6 +32,6 @@ export const orders: OrderItemType[] = [
 			price: 30.29,
 		},
 		quantity: 2,
-		observation: '',
+		description: '',
 	},
 ];

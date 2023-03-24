@@ -36,7 +36,7 @@ const OrderConfirmation = ({orders, onOrdersChange}: OrderConfirmationProps) => 
 							onItemChange={handleChange}
 							product={item.product}
 							quantity={item.quantity}
-							observation={item.observation}
+							description={item.description}
 							key={`OrderConfirmation-${index}`}
 							canDelete={false}
 						/>
