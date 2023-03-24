@@ -14,6 +14,7 @@ export const AuthService = {
         "Content-Type": "application/json",
       },
     }).then((response) => response.json()),
+    
   me: (): Promise<User> => Api(endpoint.auth(), {
     method: "GET",
   }).then((response) => response.json()) 
