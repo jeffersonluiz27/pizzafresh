@@ -10,8 +10,9 @@ export const Auth = {
 
     return token !== null && user !== null
   },
+
   logout: (): void => {
-    LocalStorageHelper.clear
+    LocalStorageHelper.clear()
     window.location.replace(RoutePath.LOGIN)
   }
 }
