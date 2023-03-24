@@ -28,7 +28,7 @@ const Login = () => {
 					LocalStorageHelper.set<User>(LocalStorageKeys.USER, data.user)
 					navigate(RoutePath.HOME)
 				}
-				setErrorMessage(`Tente Novamente`)
+				setErrorMessage(`Tente Novamente!`)
 			},
 			onError: () => {
 				setErrorMessage(`Ocorreu um erro durante a requisição`)
