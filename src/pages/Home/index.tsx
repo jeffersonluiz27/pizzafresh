@@ -10,7 +10,7 @@ import OrderDetails from 'components/OrderDetails';
 import CheckoutSection from 'components/CheckoutSection';
 import { useNavigate } from 'react-router-dom';
 import Overlay from 'components/Overlay';
-import { ProductResponse } from 'types/products';
+import { ProductResponse } from 'types/api/product';
 import { OrderType } from 'types/ordertype';
 import { useEffect, useState } from 'react';
 import { OrderItemType } from 'types/orderItemType';
@@ -64,8 +64,9 @@ const Home = () => {
 		setOrders(filtered);
 	};
 
-	useEffect(() =>{
-		setProducts(productsData || [])
+	useEffect(() => {
+		setProducts(productsData || []);
+		// eslint-disable-next-line
 	}, productsData)
 
 	return (
