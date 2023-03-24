@@ -17,6 +17,7 @@ import { OrderItemType } from 'types/orderItemType';
 import { useQuery } from 'react-query';
 import { QueryKey } from 'types/QueryKey';
 import { ProductService } from 'services/ProductService';
+import { TableService } from 'services/TableService';
 
 const Home = () => {
 	const dateDescription = DateTime.now().toLocaleString({
@@ -30,12 +31,17 @@ const Home = () => {
 		ProductService.getLista
 	);
 
-	const [products, setProducts] = useState<ProductResponse[]>([])
+	const {data: tablesData} = useQuery(
+		QueryKey.TABLES,
+		TableService.getLista
+	);
 
+	const tables = tablesData || []
+
+	const [products, setProducts] = useState<ProductResponse[]>([])
 	const [activeOrderType, setActiveOrderType] = useState(
 		OrderType.COMER_NO_LOCAL
 	);
-
 	const [orders, setOrders] = useState<OrderItemType[]>([]);
 	const [porceedToPayment, setPorceedToPayment] = useState<boolean>(false);
 	const [selectedTable, setSelectedTable] = useState<number|undefined>();
@@ -89,7 +95,7 @@ const Home = () => {
 						<b>Pizzas</b>
 					</S.HomeProductTitle>
 					<S.HomeProductList>
-						<ProductItemList onSelectTable={setSelectedTable}>
+						<ProductItemList tables={tables} onSelectTable={setSelectedTable}>
 							{Boolean(products.length) && 
 								products.map((product, index) => (
 									<ProductItem 
