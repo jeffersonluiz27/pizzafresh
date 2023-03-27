@@ -54,7 +54,8 @@ const ManageTables = ({ ...props }: ManageTablesProps) => {
       const editedTables = tables.filter((i) => data.id !== i.id);
       setTables(editedTables);
     },
-    onError: () => {
+    onError: (error, variables,context) => {
+      console.log(error,variables,context)
       console.error("Erro ao remover a mesa");
     },
   });

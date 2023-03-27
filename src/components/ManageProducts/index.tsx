@@ -37,6 +37,7 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 			if (data.statusCode) {
 				return;
 			}
+
 			const editedUsers = products.map((i) =>
 				data.id === i.id ? (data as ProductResponse) : i
 			);
@@ -124,7 +125,6 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 	};
 
 	const handleDelete = (productToDelete: ProductResponse) => {
-		debugger
 		remove.mutate(productToDelete.id);
 		handleCancel();
 	}
