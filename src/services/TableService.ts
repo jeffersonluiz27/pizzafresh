@@ -20,12 +20,12 @@ export const TableService = {
     }).then((response) => response.json()),
 
   getById: (id: string) =>
-    Api(endpoint.tablebyId(id), {
+    Api(endpoint.tableById(id), {
       method: "GET",
     }).then((response) => response.json()),
 
   updateById: (table: TableResponse): Promise<TableResponse & ErrorResponse> =>
-    Api(endpoint.tablebyId(table.id), {
+    Api(endpoint.tableById(table.id), {
       method: "PATCH",
       body: JSON.stringify({ number: table.number }),
       mode: "cors",
@@ -35,7 +35,7 @@ export const TableService = {
     }).then((response) => response.json()),
 
   deleteById: (id: string) =>
-    Api(endpoint.tablebyId(id), {
+    Api(endpoint.tableById(id), {
       method: "DELETE",
     }).then((response) => response.json()),
 };

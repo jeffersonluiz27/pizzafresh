@@ -5,18 +5,23 @@ import * as S from './style';
 
 interface EditProductProps {
 	product: ProductResponse;
+	onCancel: boolean;
 	onEdit: (data: ProductResponse) => void;
 	onDelete: (data: ProductResponse) => void;
-	onCancel: boolean;
+	
 }
 
 const EditProduct = ({
 	product,
+	onCancel,
 	onEdit,
 	onDelete,
-	onCancel,
 }: EditProductProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+
+	useEffect(() => {
+		setIsEditing(false);
+	}, [onCancel]);
 
 	const form = {
 		name: product.name,
@@ -47,9 +52,7 @@ const EditProduct = ({
 		onEdit(productFormatted);
 	};
 
-	useEffect(() => {
-		setIsEditing(false);
-	}, [onCancel]);
+	
 
 	return (
 		<S.EditProduct role={'listitem'}>

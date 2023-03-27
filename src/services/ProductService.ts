@@ -19,12 +19,12 @@ export const ProductService = {
     }).then((response => response.json())),
 
   getById: (id: string) => 
-    Api(endpoint.productbyId(id), {
+    Api(endpoint.productById(id), {
       method: "GET",
     }).then((response) => response.json()),
 
   updateById: ({product, id}: ProductUpdate) => 
-    Api(endpoint.productbyId(id), {
+    Api(endpoint.productById(id), {
       method: "PATCH",
       body: JSON.stringify(product),
       mode: "cors",
@@ -34,7 +34,7 @@ export const ProductService = {
     }).then((response) => response.json()),
 
   deleteById: (id: string) => 
-    Api(endpoint.productbyId(id), {
+    Api(endpoint.productById(id), {
       method: "DELETE",
     }).then((response) => response.json()),
   

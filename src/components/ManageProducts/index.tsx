@@ -61,15 +61,15 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		},
 	});
 
-	let productToEdit: ProductResponse[] = [];
+	let productsToEdit: ProductResponse[] = [];
 
 	const onEditProduct = (toEdit: ProductResponse) => {
 		setCancel(false);
-		const existing = productToEdit.find((user) => user.id === toEdit.id);
+		const existing = productsToEdit.find((user) => user.id === toEdit.id);
 
-		productToEdit = existing
-			? productToEdit.map((i) => (i.id === existing.id ? toEdit : i))
-			: [...productToEdit, toEdit];
+		productsToEdit = existing
+			? productsToEdit.map((i) => (i.id === existing.id ? toEdit : i))
+			: [...productsToEdit, toEdit];
 	};
 
 	const form = {
@@ -106,14 +106,14 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		setCancel(true);
 		setIsAdding(false);
 		setTimeout(() => setCancel(false));
-		productToEdit = [];
+		productsToEdit = [];
 	};
 
 	const handleSave = () => {
 		const canAdd = productIsValid();
 		const productFormatted = productFormatter(productToAdd);
 
-		productToEdit.forEach((product) =>
+		productsToEdit.forEach((product) =>
 			update.mutate({ product, id: product.id })
 		);
 
