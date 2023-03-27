@@ -13,20 +13,9 @@ type ManageProductsType = HTMLAttributes<HTMLDivElement>;
 type ManageProductsProps = {} & ManageProductsType;
 
 const ManageProducts = ({ ...props }: ManageProductsProps) => {
-	const form = {
-		name: '',
-		price: Number(''),
-		image: '',
-		description: '',
-	};
-
 	const [products, setProducts] = useState<ProductResponse[]>([]);
-	const [isAdding, setIsAdding] = useState(false);
-	const [productToAdd, setProductToAdd] = useState(form);
-	const [cancel, setCancel] = useState<boolean>(false);
-
 	const { data: productsData } = useQuery(
-		QueryKey.PRODUCTS,
+		[QueryKey.PRODUCTS],
 		ProductService.getLista
 	);
 
@@ -73,24 +62,35 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 	});
 
 	let productToEdit: ProductResponse[] = [];
+
 	const onEditProduct = (toEdit: ProductResponse) => {
 		setCancel(false);
 		const existing = productToEdit.find((user) => user.id === toEdit.id);
+
 		productToEdit = existing
 			? productToEdit.map((i) => (i.id === existing.id ? toEdit : i))
 			: [...productToEdit, toEdit];
 	};
 
-	const handleAddChange = (name: string, value: string | number) => {
-		setProductToAdd({ ...productToAdd, [name]: value });
+	const form = {
+		name: '',
+		price: Number(""),
+		image: '',
+		description: '',
 	};
 
-	const productIsValid = () =>
-		Boolean(
-			productToAdd.name.length &&
-			productToAdd.price.toString().length &&
-			productToAdd.description.length &&
-			productToAdd.image.length
+	const [isAdding, setIsAdding] = useState(false);
+	const [productToAdd, setProductToAdd] = useState(form);
+
+	const handleAddChange = (name: string, value: string | number) => {
+		setProductToAdd({...productToAdd, [name]: value });
+	};
+
+	const productIsValid = () => Boolean(
+		productToAdd.name.length &&
+		productToAdd.price.toString().length &&
+		productToAdd.description.length &&
+		productToAdd.image.length
 	);
 
 	const productFormatter = (toFormat: typeof form): Product => ({
@@ -99,6 +99,8 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		description: toFormat.description,
 		image: toFormat.image,
 	});
+
+	const [cancel, setCancel] = useState(false);
 
 	const handleCancel = () => {
 		setCancel(true);
@@ -122,6 +124,7 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 	};
 
 	const handleDelete = (productToDelete: ProductResponse) => {
+		debugger
 		remove.mutate(productToDelete.id);
 		handleCancel();
 	}
@@ -155,7 +158,7 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 							type="number"
 							placeholder="Preço"
 							success={Boolean(productToAdd.price)}
-							value={productToAdd.price || ''}
+							value={productToAdd.price || ""}
 							onChange={({ target }) => handleAddChange('price', +target.value)}
 						/>
 						<S.EditForm

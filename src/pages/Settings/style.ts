@@ -15,7 +15,7 @@ export const SettingsPage = styled.div`
 		display: flex;
 		flex-direction: column;
 		width: calc(100% - 100px);
-		max-height: 100vh;
+		max-height: 100%;
 		padding: 25px;
 		box-sizing: border-box;
 	`}

@@ -31,7 +31,7 @@ export const ProductService = {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((response => response.json())),
+    }).then((response) => response.json()),
 
   deleteById: (id: string) => 
     Api(endpoint.productbyId(id), {

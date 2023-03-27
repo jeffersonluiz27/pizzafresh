@@ -35,8 +35,8 @@ const EditProduct = ({
 		image: toFormat.image,
 	});
 
-	const handleChange = (name: string, value: string) => {
-		setState({ ...state, [name]: value });
+	const handleChange = (name: string, value: string | number) => {
+		setState({...state, [name]: value });
 		const productFormatted = productEditFormatter(state);
 		onEdit(productFormatted);
 	};
@@ -62,7 +62,7 @@ const EditProduct = ({
 					<S.EditProductDetails>
 						<S.EditProductDetailsName>{product.name}</S.EditProductDetailsName>
 						<S.EditProductDetailsPrice>
-							R$ {product.price}
+							{product.price}
 						</S.EditProductDetailsPrice>
 						<S.EditProductDetailsDescription>
 							{product.description}
@@ -84,9 +84,9 @@ const EditProduct = ({
 					<S.EditForm
 						type="number"
 						placeholder="Preço"
-						success={Boolean(state.price)}
+						success={Boolean(state.price.toString().length)}
 						value={state.price || ''}
-						onChange={({ target }) => handleChange('price', target.value)}
+						onChange={({ target }) => handleChange('price', +target.value)}
 					/>
 					<S.EditForm
 						type="text"
