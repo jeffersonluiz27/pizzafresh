@@ -19,6 +19,7 @@ import { QueryKey } from 'types/QueryKey';
 import { ProductService } from 'services/ProductService';
 import { TableService } from 'services/TableService';
 import { Auth } from 'helpers/Auth';
+import { matchByText } from 'helpers/Utils';
 
 const Home = () => {
 	const dateDescription = DateTime.now().toLocaleString({
@@ -46,6 +47,9 @@ const Home = () => {
 	const [orders, setOrders] = useState<OrderItemType[]>([]);
 	const [porceedToPayment, setPorceedToPayment] = useState<boolean>(false);
 	const [selectedTable, setSelectedTable] = useState<number|undefined>();
+
+	const [filteredProducts, setfilteredProducts] = useState<ProductResponse[]>([])
+
 	const handleNavigation = (path: RoutePath) => navigate(path);
 
 	const handleSelection = (product: ProductResponse) => {
@@ -64,8 +68,14 @@ const Home = () => {
 		setOrders(filtered);
 	};
 
+	const handleFilter = (title: string) => {
+		const list = products.filter(({name}) => matchByText(name, title));
+		setfilteredProducts(list);
+	}
+
 	useEffect(() => {
 		setProducts(productsData || []);
+		setfilteredProducts(productsData || []);
 		// eslint-disable-next-line
 	}, productsData)
 
@@ -88,7 +98,11 @@ const Home = () => {
 						</div>
 						<S.HomeHeaderDetailsSearch>
 							<Search />
-							<input type="text" placeholder="Procure pelo sabor" />
+							<input 
+								type="text" 
+								placeholder="Procure pelo sabor" 
+								onChange={({target}) => handleFilter(target.value)}
+							/>
 						</S.HomeHeaderDetailsSearch>
 					</S.HomeHeaderDetails>
 				</header>
@@ -99,7 +113,7 @@ const Home = () => {
 					<S.HomeProductList>
 						<ProductItemList tables={tables} onSelectTable={setSelectedTable}>
 							{Boolean(products.length) && 
-								products.map((product, index) => (
+								filteredProducts.map((product, index) => (
 									<ProductItem 
 										product={product}
 										key={`ProductItem-${index}`}
