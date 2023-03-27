@@ -33,7 +33,7 @@ export const ProductService = {
       },
     }).then((response => response.json())),
 
-  deletetById: (id: string) => 
+  deleteById: (id: string) => 
     Api(endpoint.productbyId(id), {
       method: "DELETE",
     }).then((response) => response.json()),

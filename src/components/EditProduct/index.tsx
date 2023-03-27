@@ -6,10 +6,18 @@ import * as S from './style';
 interface EditProductProps {
 	product: ProductResponse;
 	onEdit: (data: ProductResponse) => void;
+	onDelete: (data: ProductResponse) => void;
 	onCancel: boolean;
 }
 
-const EditProduct = ({product, onEdit, onCancel}: EditProductProps) => {
+const EditProduct = ({
+	product,
+	onEdit,
+	onDelete,
+	onCancel,
+}: EditProductProps) => {
+	const [isEditing, setIsEditing] = useState(false);
+
 	const form = {
 		name: product.name,
 		price: product.price,
@@ -17,7 +25,6 @@ const EditProduct = ({product, onEdit, onCancel}: EditProductProps) => {
 		description: product.description,
 	};
 
-	const [isEditing, setIsEditing] = useState(false);
 	const [state, setState] = useState(form);
 
 	const productEditFormatter = (toFormat: typeof form): ProductResponse => ({
@@ -29,72 +36,76 @@ const EditProduct = ({product, onEdit, onCancel}: EditProductProps) => {
 	});
 
 	const handleChange = (name: string, value: string) => {
-		setState({ ...state, [name]: value});
+		setState({ ...state, [name]: value });
 		const productFormatted = productEditFormatter(state);
-		onEdit(productFormatted)
+		onEdit(productFormatted);
 	};
 
 	const onEditClick = () => {
 		setIsEditing(true);
 		const productFormatted = productEditFormatter(state);
-		onEdit(productFormatted)
-	}
+		onEdit(productFormatted);
+	};
 
 	useEffect(() => {
-		setIsEditing(false)
+		setIsEditing(false);
 	}, [onCancel]);
 
 	return (
 		<S.EditProduct role={'listitem'}>
 			{!isEditing ? (
-			<>
-				<S.EditProductImage src={product.image} alt={`Pizza de ${product.name}`} />
-				<S.EditProductDetails>
-					<S.EditProductDetailsName>{product.name}</S.EditProductDetailsName>
-					<S.EditProductDetailsPrice>R$ {product.price}</S.EditProductDetailsPrice>
-					<S.EditProductDetailsDescription>
-						{product.description}
-					</S.EditProductDetailsDescription>
-				</S.EditProductDetails>
-				<S.EditProductAction onClick={() => onEditClick()}>
-					<Pencil /> Editar
-				</S.EditProductAction>
-			</>
+				<>
+					<S.EditProductImage
+						src={product.image}
+						alt={`Pizza de ${product.name}`}
+					/>
+					<S.EditProductDetails>
+						<S.EditProductDetailsName>{product.name}</S.EditProductDetailsName>
+						<S.EditProductDetailsPrice>
+							R$ {product.price}
+						</S.EditProductDetailsPrice>
+						<S.EditProductDetailsDescription>
+							{product.description}
+						</S.EditProductDetailsDescription>
+					</S.EditProductDetails>
+					<S.EditProductAction onClick={() => onEditClick()}>
+						<Pencil /> Editar
+					</S.EditProductAction>
+				</>
 			) : (
-			<S.EditFormGroup>
-				<S.EditForm 
-					type="text" 
-					placeholder="Título" 
-					success={Boolean(state.name.length)}
-					value={state.name}
-					onChange={({target}) => handleChange("name", target.value)}
-				/>
-				<S.EditForm 
-					type="number" 
-					placeholder="Preço" 
-					success={Boolean(state.price)}
-					value={state.price || ""}
-					onChange={({target}) => handleChange("price", target.value)}
-				/>
-				<S.EditForm 
-					type="text" 
-					placeholder="Descrição" 
-					success={Boolean(state.description.length)}
-					value={state.description}
-					onChange={({target}) => handleChange("description", target.value)}
-				/>
-				<S.EditForm 
-					type="url" 
-					placeholder="Imagem" 
-					success={Boolean(state.image.length)}
-					value={state.image}
-					onChange={({target}) => handleChange("image", target.value)}
-				/>
-				<S.Delete>Deletar</S.Delete>
-			</S.EditFormGroup>
+				<S.EditFormGroup>
+					<S.EditForm
+						type="text"
+						placeholder="Título"
+						success={Boolean(state.name.length)}
+						value={state.name}
+						onChange={({ target }) => handleChange('name', target.value)}
+					/>
+					<S.EditForm
+						type="number"
+						placeholder="Preço"
+						success={Boolean(state.price)}
+						value={state.price || ''}
+						onChange={({ target }) => handleChange('price', target.value)}
+					/>
+					<S.EditForm
+						type="text"
+						placeholder="Descrição"
+						success={Boolean(state.description.length)}
+						value={state.description}
+						onChange={({ target }) => handleChange('description', target.value)}
+					/>
+					<S.EditForm
+						type="url"
+						placeholder="Imagem"
+						success={Boolean(state.image.length)}
+						value={state.image}
+						onChange={({ target }) => handleChange('image', target.value)}
+					/>
+					<S.Delete onClick={() => onDelete(product)}>Deletar</S.Delete>
+				</S.EditFormGroup>
 			)}
 		</S.EditProduct>
-		
 	);
 };
 
