@@ -44,6 +44,30 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		},
 	});
 
+	const update = useMutation(ProductService.updateById, {
+		onSuccess: (data: ProductResponse & ErrorResponse) => {
+			if(data.statusCode){
+				return
+			}
+			const editedUsers = products.map((i) => 
+				data.id === i.id ? (data as ProductResponse) : i
+			);
+			setProducts(editedUsers);
+		},
+		onError: () => {
+			console.error("Erro ao atualizar o produto");
+		},
+	});
+
+	let productToEdit: ProductResponse[] = [];
+	const onEditProduct = (toEdit: ProductResponse) => {
+		setCancel(false);
+		const existing = productToEdit.find((user) => user.id === toEdit.id);
+		productToEdit = existing 
+		? productToEdit.map((i) => (i.id === existing.id) ? toEdit : i)
+		: [...productToEdit, toEdit]
+	}
+
 	const handleAddChange = (name: string, value: string|number) => {
 		setProductToAdd({ ...productToAdd, [name]: value})
 	}
@@ -61,27 +85,32 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		price: toFormat.price,
 		description: toFormat.description,
 		image: toFormat.image,
-	})
+	});
 
 	const handleCancel = () => {
 		setCancel(true);
 		setIsAdding(false);
 		setTimeout(()=> setCancel(false));
-	}
+		productToEdit = [];
+	};
 
 	const handleSave = () => {
 		const canAdd = productIsValid();
 		const productFormatted = productFormatter(productToAdd);
 
+		productToEdit.forEach(
+			(product) => update.mutate({product, id: product.id})
+		);
+
 		if(canAdd) add.mutate(productFormatted);
 		setTimeout(() => handleCancel(),300);
 		setProductToAdd(form);
 		setIsAdding(false);
-	}
+	};
 
 	useEffect(() => {
 		setProducts(productsData || []);
-	}, [productsData])
+	}, [productsData]);
 
 	return (
 		<S.ManageProducts {...props}>
@@ -131,6 +160,8 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 					<EditProduct 
 						product={product}
 						key={index}
+						onEdit={onEditProduct}
+						onCancel={cancel}
 					/>
 				))}
 			</S.ManageProductsContent>

@@ -76,8 +76,7 @@ const Home = () => {
 	useEffect(() => {
 		setProducts(productsData || []);
 		setfilteredProducts(productsData || []);
-		// eslint-disable-next-line
-	}, productsData)
+	}, [productsData])
 
 	return (
 		<S.Home>
