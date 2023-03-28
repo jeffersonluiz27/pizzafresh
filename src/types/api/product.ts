@@ -17,5 +17,5 @@ export interface ProductResponse{
   image: string;
   price: number;
   updatedAt?: string;
-  createdAt?: string,
+  createdAt?: string;
 }

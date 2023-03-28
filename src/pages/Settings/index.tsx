@@ -4,6 +4,7 @@ import { navigationItems } from 'data/navigation';
 import * as S from './style';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavColumn from 'components/NavColumn';
+import { Auth } from 'helpers/Auth';
 
 const Settings = () => {
 	const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Settings = () => {
 				active={RoutePath.SETTINGS}
 				navItems={navigationItems}
 				onNavigate={handleNavigation}
-				onLogout={() => navigate(RoutePath.LOGIN)}
+				onLogout={Auth.logout}
 			/>
 			<S.SettingsPage>
 				<header>

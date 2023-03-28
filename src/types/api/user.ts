@@ -2,13 +2,13 @@ export interface User {
   nickname: string;
   name: string;
   password: string;
-  passwordConfirm: string;
+  confirmPassword: string;
   image: string;
 }
 
 export interface UserUpdate {
   user: User;
-  id: string
+  id: string;
 }
 
 export interface UserResponse{
@@ -18,5 +18,5 @@ export interface UserResponse{
   password: string;
   image: string;
   updatedAt?: string;
-  createdAt?: string,
+  createdAt?: string;
 }

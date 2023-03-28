@@ -1,12 +1,12 @@
 import { ReactComponent as Pencil } from 'assets/icons/edit.svg';
 import { useEffect, useState } from 'react';
-import { ProductResponse } from 'types/api/product';
+import { Product, ProductResponse, ProductUpdate } from 'types/api/product';
 import * as S from './style';
 
 interface EditProductProps {
 	product: ProductResponse;
 	onCancel: boolean;
-	onEdit: (data: ProductResponse) => void;
+	onEdit: (data: ProductUpdate) => void;
 	onDelete: (data: ProductResponse) => void;
 	
 }
@@ -19,11 +19,8 @@ const EditProduct = ({
 }: EditProductProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 
-	useEffect(() => {
-		setIsEditing(false);
-	}, [onCancel]);
-
 	const form = {
+		id: product.id,
 		name: product.name,
 		price: product.price,
 		image: product.image,
@@ -32,8 +29,7 @@ const EditProduct = ({
 
 	const [state, setState] = useState(form);
 
-	const productEditFormatter = (toFormat: typeof form): ProductResponse => ({
-		id: product.id,
+	const productEditFormatter = (toFormat: typeof form): Product => ({
 		name: toFormat.name,
 		price: toFormat.price,
 		description: toFormat.description,
@@ -42,17 +38,19 @@ const EditProduct = ({
 
 	const handleChange = (name: string, value: string | number) => {
 		setState({...state, [name]: value });
-		const productFormatted = productEditFormatter(state);
+		const productFormatted = {product: productEditFormatter(state), id: product.id};
 		onEdit(productFormatted);
 	};
 
 	const onEditClick = () => {
 		setIsEditing(true);
-		const productFormatted = productEditFormatter(state);
+		const productFormatted = {product: productEditFormatter(state), id: product.id};
 		onEdit(productFormatted);
 	};
 
-	
+	useEffect(() => {
+		setIsEditing(false);
+	}, [onCancel]);
 
 	return (
 		<S.EditProduct role={'listitem'}>

@@ -6,5 +6,5 @@ export interface TableResponse {
   id: string;
   number: number;
   updatedAt?: string;
-  createdAt?: string,
+  createdAt?: string;
 }

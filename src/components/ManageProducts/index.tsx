@@ -4,7 +4,7 @@ import { HTMLAttributes, useState, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { ProductService } from 'services/ProductService';
 import { ErrorResponse } from 'types/api/error';
-import { Product, ProductResponse } from 'types/api/product';
+import { Product, ProductResponse, ProductUpdate } from 'types/api/product';
 import { QueryKey } from 'types/QueryKey';
 import * as S from './style';
 
@@ -13,6 +13,7 @@ type ManageProductsType = HTMLAttributes<HTMLDivElement>;
 type ManageProductsProps = {} & ManageProductsType;
 
 const ManageProducts = ({ ...props }: ManageProductsProps) => {
+
 	const [products, setProducts] = useState<ProductResponse[]>([]);
 	const { data: productsData } = useQuery(
 		[QueryKey.PRODUCTS],
@@ -62,22 +63,25 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 		},
 	});
 
-	let productsToEdit: ProductResponse[] = [];
-
-	const onEditProduct = (toEdit: ProductResponse) => {
-		setCancel(false);
-		const existing = productsToEdit.find((user) => user.id === toEdit.id);
-
-		productsToEdit = existing
-			? productsToEdit.map((i) => (i.id === existing.id ? toEdit : i))
-			: [...productsToEdit, toEdit];
-	};
+	type productToEditType = {id: string} & Product;
+	let productsToEdit: productToEditType[] = [];
 
 	const form = {
 		name: '',
-		price: Number(""),
+		price: Number(''),
 		image: '',
 		description: '',
+	};
+
+	const onEditProduct = (toEdit: ProductUpdate) => {
+		setCancel(false);
+		const existing = productsToEdit.find((user) => user.id === toEdit.id);
+
+		const productFormatted = { ...toEdit.product, id: toEdit.id};
+
+		productsToEdit = existing
+			? productsToEdit.map((i) => (i.id === existing.id ? productFormatted : i))
+			: [...productsToEdit, productFormatted];
 	};
 
 	const [isAdding, setIsAdding] = useState(false);
@@ -157,7 +161,7 @@ const ManageProducts = ({ ...props }: ManageProductsProps) => {
 						<S.EditForm
 							type="number"
 							placeholder="Preço"
-							success={Boolean(productToAdd.price)}
+							success={Boolean(productToAdd.price.toString().length)}
 							value={productToAdd.price || ""}
 							onChange={({ target }) => handleAddChange('price', +target.value)}
 						/>
